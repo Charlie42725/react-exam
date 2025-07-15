@@ -1,63 +1,109 @@
-import React, { useState } from 'react';
-import { copyToClipboard } from '../utils/copyToClipboard';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Card, CardContent, Button, CircularProgress, Alert } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import axios from 'axios';
 import '../styles/components/PracticeSection.css';
 
+const API_URL = 'http://localhost:5000/api';
+
 const AIPracticeSection = () => {
-  const [copiedIndex, setCopiedIndex] = useState(null);
+  const [practices, setPractices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [categoryName, setCategoryName] = useState('');
 
-  const practices = [
-    {
-      title: "產出一份考卷並優化",
-      prompt: "我目前是國中{ 年級 } 請幫我出{ }題選擇題\n這是我已經會的章節{數與式、幾何、代數、統計與機率、函數與圖形}\n難度為{ 簡單、中等、困難、資優 }的考卷",
-      steps: ["複製提示詞", "貼上GPT"]
-    },
-    {
-      title: "檢查解法",
-      prompt: "我的步驟 [具體內容] 對嗎？有沒有錯？",
-      steps: ["先貼上自己的解題過程", "複製提示詞", "貼上GPT"]
-    },
-    {
-      title: "理解錯誤",
-      prompt: "我這裡 [具體錯誤] 為什麼錯？請解釋並示範",
-      steps: ["複製提示詞", "貼上GPT"]
-    },
-    {
-      title: "練習類似題目",
-      prompt: "請給我 [數量] 道類似題目，附答案",
-      steps: ["複製提示詞", "貼上GPT"]
+  const fetchPractices = async () => {
+    try {
+      console.log('Fetching AI practices...');
+      // 直接使用分類ID獲取內容
+      const response = await axios.get(`${API_URL}/contents?category=ai-practice`);
+      console.log('Received AI practices:', response.data);
+      setPractices(response.data);
+      
+      // 獲取分類名稱
+      const categoryResponse = await axios.get(`${API_URL}/categories`);
+      const category = categoryResponse.data.find(cat => cat._id === 'ai-practice');
+      if (category) {
+        setCategoryName(category.label);
+      }
+      
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching AI practices:', err);
+      setError('獲取AI實戰內容失敗：' + err.message);
+    } finally {
+      setLoading(false);
     }
-  ];
-
-  const handleCopy = (text, index) => {
-    copyToClipboard(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
   };
+
+  useEffect(() => {
+    fetchPractices();
+  }, [retryCount]);
+
+  const handleRetry = () => {
+    setLoading(true);
+    setRetryCount(prev => prev + 1);
+  };
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box p={2}>
+        <Alert 
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={handleRetry}>
+              重試
+            </Button>
+          }
+        >
+          {error}
+        </Alert>
+      </Box>
+    );
+  }
 
   return (
     <div className="practice-section">
-      <h2 className="section-title">AI實戰</h2>
+      <h2 className="section-title">{categoryName}</h2>
       <div className="practices-grid">
         {practices.map((practice, index) => (
-          <div key={index} className="practice-card">
-            <h3 className="practice-title">{practice.title}</h3>
-            <div className="prompt-box">
-              <pre className="prompt-text">{practice.prompt}</pre>
-              <button 
-                className="copy-button"
-                onClick={() => handleCopy(practice.prompt, index)}
-              >
-                {copiedIndex === index ? '已複製！' : '複製提示詞'}
-              </button>
-              <div className="steps-box">
+          <div key={practice._id} className="practice-card">
+            <h3>{practice.title}</h3>
+            <div className="practice-content">
+              <pre>{practice.prompt}</pre>
+            </div>
+            {practice.steps && practice.steps.length > 0 && (
+              <div className="practice-steps">
                 <h4>操作步驟：</h4>
                 <ol>
-                  {practice.steps.map((step, stepIndex) => (
-                    <li key={stepIndex}>{step}</li>
+                  {practice.steps.map((step, index) => (
+                    <li key={index}>{step}</li>
                   ))}
                 </ol>
               </div>
-            </div>
+            )}
+            <button 
+              className="copy-button"
+              onClick={() => {
+                navigator.clipboard.writeText(practice.prompt);
+                alert('已複製到剪貼簿');
+              }}
+            >
+              複製提示詞
+            </button>
           </div>
         ))}
       </div>

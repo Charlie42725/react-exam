@@ -287,4 +287,33 @@ button:active {
   .welcome-box p {
     font-size: 1.1rem !important;
   }
+}
+
+.new-system-link,
+.back-link {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.new-system-link:hover,
+.back-link:hover {
+  background-color: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.back-link {
+  background-color: #666;
+}
+
+.back-link:hover {
+  background-color: #555;
 } 

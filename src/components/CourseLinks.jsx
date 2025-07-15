@@ -1,86 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Card, CardContent, Button, CircularProgress, Alert } from '@mui/material';
+import axios from 'axios';
 import '../styles/components/CourseLinks.css';
 
-const CourseLinks = () => {
-  const links = [
-    {
-      title: 'ChatGPT',
-      url: 'https://chat.openai.com/',
-      icon: '🤖'
-    },
-    {
-      title: 'AI數學營',
-      url: 'https://drive.google.com/drive/folders/1FyHFaFnUVx0uEvavByWBaY6OfjmYlGWi?usp=sharing',
-      icon: '📚'
-    },
-    {
-      title: '產出分享區',
-      url: 'https://docs.google.com/document/d/1z2Sqsc8d8NqZvKZbwKvZrCLmjHqXQ0aw7HHyA7auqEk/edit?usp=sharing',
-      icon: '📝'
-    },
-    {
-      title: '課後意見回饋表',
-      url: 'https://docs.google.com/forms/d/e/1FAIpQLSf-JSLcvDZrbrTXp-CDxZTofR5a2KjJD-mGM_Gpg0Z3r9EY6g/viewform?usp=dialog',
-      icon: '📊'
-    }
-  ];
+const API_URL = 'http://localhost:5000/api';
 
-  const tools = [
-    {
-      title: 'Google AI Studio',
-      url: 'https://aistudio.google.com/prompts/new_chat',
-      icon: '🔧'
-    },
-    {
-      title: 'Slovely AI',
-      url: 'https://solvely.ai/history/2025_4_14_dd0668b9-b5cb-420c-9f7d-22fd1f8f59d4',
-      icon: '⚡'
-    },
-    {
-      title: 'Mathos AI',
-      url: 'https://www.mathgptpro.com/zh-TW/',
-      icon: '🧮'
-    }
-  ];
+const CourseLinks = () => {
+  const [links, setLinks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchLinks = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/contents?category=rd-course-links`);
+        setLinks(response.data);
+        setError(null);
+      } catch (err) {
+        setError('獲取課程連結失敗：' + err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLinks();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box p={2}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
 
   return (
-    <div className="course-links">
-      <div className="links-section">
-        <h3>課程相關連結</h3>
-        <div className="links-grid">
-          {links.map((link, index) => (
-            <a
-              key={index}
-              href={link.url}
+    <Box>
+      {links.map((link, index) => (
+        <Card key={link._id || index} sx={{ mb: 2 }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              {link.title}
+            </Typography>
+            <Typography variant="body1" paragraph>
+              {link.prompt}
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              href={link.steps[0]}
               target="_blank"
               rel="noopener noreferrer"
-              className="link-card"
             >
-              <span className="link-icon">{link.icon}</span>
-              <span className="link-title">{link.title}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-
-      <div className="tools-section">
-        <h3>輔助工具</h3>
-        <div className="links-grid">
-          {tools.map((tool, index) => (
-            <a
-              key={index}
-              href={tool.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-card"
-            >
-              <span className="link-icon">{tool.icon}</span>
-              <span className="link-title">{tool.title}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </div>
+              前往連結
+            </Button>
+          </CardContent>
+        </Card>
+      ))}
+    </Box>
   );
 };
 
