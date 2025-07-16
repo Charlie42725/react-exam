@@ -1,0 +1,131 @@
+:root {
+  --text-color-primary: #2196f3;
+  --text-color-secondary: #03a9f4;
+  --text-color-accent: #00bcd4;
+  --text-color-muted: #555;
+  --border-color: rgba(33, 150, 243, 0.1);
+  --background-color: #f8f9fa;
+  --background-color-primary: #ffffff;
+  --text-color: #333;
+  --gradient-start: #2196f3;
+  --gradient-end: #00bcd4;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+  margin: auto;
+  color: var(--text-color);
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  gap: 1rem;
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem;
+  }
+}
+
+h1 {
+  color: var(--text-color-primary);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+h1::after {
+  content: "";
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--gradient-start),
+    var(--gradient-end)
+  );
+  border-radius: 2px;
+}
+
+.card {
+  background: var(--background-color-primary);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border-color);
+}
+
+select {
+  padding: 0.75em 1.5em;
+  border: 2px solid var(--border-color);
+  border-radius: 0.5rem;
+  background: var(--background-color-primary);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232196F3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 15px;
+  padding-right: 3em;
+}
+
+select:hover {
+  border-color: var(--text-color-primary);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--text-color-primary);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(33, 150, 243, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(33, 150, 243, 0);
+  }
+}
+
+button,
+.btn,
+.btn-primary {
+  cursor: pointer;
+  text-decoration: none;
+}
+button:hover,
+.btn:hover,
+.btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.2);
+}
+.btn-primary {
+  background-color: var(--text-color-primary);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  transition: all 0.3s ease;
+}

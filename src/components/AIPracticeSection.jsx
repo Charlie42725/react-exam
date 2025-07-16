@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, Card, CardContent, Button, CircularProgress, Alert } from '@mui/material';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useState, useEffect } from 'react';
+import { Box, Button, CircularProgress, Alert } from '@mui/material';
 import axios from 'axios';
 import '../styles/components/PracticeSection.css';
 

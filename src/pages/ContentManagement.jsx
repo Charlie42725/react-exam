@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -61,7 +61,7 @@ function ContentManagement() {
   });
 
   // 獲取分類列表
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await axios.get(`${API_URL}/categories?system=${selectedSystem}`);
       setCategories(response.data);
@@ -69,10 +69,10 @@ function ContentManagement() {
       console.error('Error fetching categories:', err);
       setError('獲取分類列表失敗');
     }
-  };
+  }, [selectedSystem]);
 
   // 獲取所有內容
-  const fetchContents = async () => {
+  const fetchContents = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/contents?system=${selectedSystem}`);
@@ -84,12 +84,12 @@ function ContentManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedSystem]);
 
   useEffect(() => {
     fetchCategories();
     fetchContents();
-  }, [selectedSystem]);
+  }, [fetchCategories, fetchContents, selectedSystem]);
 
   // 處理分類過濾
   useEffect(() => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/components/QuestionCard.css';
 
 const QuestionCard = ({ question, imageUrl }) => {
