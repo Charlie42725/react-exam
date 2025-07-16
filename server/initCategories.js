@@ -49,22 +49,32 @@ const initCategories = async () => {
     // 企業內訓系統分類
     const corpCategories = [
       {
-        value: 'corp-course-links',
+        value: 'course-links',
         label: '課程連結',
         system: 'corp'
       },
       {
-        value: 'corp-ai-english',
+        value: 'ai-english',
         label: 'AI怎麼應用在英文',
         system: 'corp'
       },
       {
-        value: 'corp-exam-structure',
+        value: 'exam-structure',
         label: '考試架構分析',
         system: 'corp'
       },
       {
-        value: 'corp-prediction',
+        value: 'ai-practice',
+        label: 'AI練習',
+        system: 'corp'
+      },
+      {
+        value: 'ai-prompts',
+        label: 'AI Prompt 指令庫',
+        system: 'corp'
+      },
+      {
+        value: 'prediction',
         label: '預測考題及個人分析報告',
         system: 'corp'
       }
