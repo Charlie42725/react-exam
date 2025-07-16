@@ -202,7 +202,6 @@ export const Index = () => {
                   <motion.div
                     key={index}
                     variants={fadeInItem}
-                    style={{ height: "100%" }}
                   >
                     <PromptCard
                       prompt={prompt}

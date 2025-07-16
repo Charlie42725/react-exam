@@ -1,14 +1,12 @@
 :root {
   --text-color-primary: #2196f3;
-  --text-color-secondary: #03a9f4;
-  --text-color-accent: #00bcd4;
+  --text-color-secondary: #10b981;
+  --text-color-accent: #03a9f4;
   --text-color-muted: #555;
   --border-color: rgba(33, 150, 243, 0.1);
   --background-color: #f8f9fa;
   --background-color-primary: #ffffff;
   --text-color: #333;
-  --gradient-start: #2196f3;
-  --gradient-end: #00bcd4;
 }
 
 * {
@@ -56,8 +54,8 @@ h1::after {
   height: 4px;
   background: linear-gradient(
     90deg,
-    var(--gradient-start),
-    var(--gradient-end)
+    var(--text-color-primary),
+    var(--text-color-secondary)
   );
   border-radius: 2px;
 }
@@ -112,6 +110,7 @@ select:focus {
 button,
 .btn,
 .btn-primary {
+  border: none;
   cursor: pointer;
   text-decoration: none;
 }
@@ -119,15 +118,14 @@ button:hover,
 .btn:hover,
 .btn-primary:hover {
   transform: translateY(-2px);
+  transition: all 0.3s ease;
   filter: brightness(1.2);
 }
 .btn-primary {
   background-color: var(--text-color-primary);
   color: white;
-  border: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   font-weight: bold;
-  transition: all 0.3s ease;
 }
 
 /* Loading states */
