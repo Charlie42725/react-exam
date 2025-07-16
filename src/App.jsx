@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material';
-import axios from 'axios';
 import QuestionBlock from './components/QuestionBlock';
-import CourseLinks from './components/CourseLinks';
-import PracticeSection from './components/PracticeSection';
-import AIPracticeSection from './components/AIPracticeSection';
-import PredictionSection from './components/PredictionSection';
-import ExamStructureSection from './components/ExamStructureSection';
+import AIPromptSection from './components/AIPromptSection';
+import { TeamIntroSection, ToolsSection, MarketAnalysisSection, ServiceIntroSection, BusinessModelSection } from './components/AIPromptCategories';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 import { questionData } from './data/questions';
 import './styles/main.css';
-
-// API 配置
-const API_URL = 'http://localhost:5000/api';
-axios.defaults.baseURL = API_URL;
 
 // 主題配置
 const theme = createTheme({
@@ -32,37 +24,18 @@ const theme = createTheme({
 
 function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/categories?system=rd`);
-        setCategories(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching categories:', err);
-        setError('獲取分類失敗：' + err.message);
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  // 使用靜態分類資料，只包含 AI Prompt 相關分類
+  const categories = [
+    { _id: '6', value: 'team-intro', label: '團隊簡介' },
+    { _id: '7', value: 'tools', label: '使用工具' },
+    { _id: '8', value: 'market-analysis', label: '產業與市場分析' },
+    { _id: '9', value: 'service-intro', label: '服務介紹' },
+    { _id: '10', value: 'business-model', label: '商業模式' }
+  ];
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };
-
-  if (loading) {
-    return <div className="loading">載入中...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
 
   return (
     <div className="app">
@@ -86,24 +59,29 @@ function HomePage() {
 
       <div className="content-area">
         {selectedCategory === '' ? (
-          <div className="welcome-box fade-in">
-            <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'16px'}}>
-              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="AI Icon" style={{width:'80px',height:'80px',marginBottom:'10px',filter:'drop-shadow(0 2px 8px #2196F355)'}}/>
-              <h2 style={{color:'var(--primary-color)',fontWeight:'bold',fontSize:'2rem',marginBottom:'10px'}}>歡迎使用「研發補助」</h2>
-              <p style={{fontSize:'1.2rem',color:'#555',maxWidth:'500px',textAlign:'center'}}>本系統結合 <span style={{color:'var(--primary-color)',fontWeight:'bold'}}>AI 技術</span>，協助你進行研發補助相關的練習、分析與規劃。<br/>請從上方選單選擇你想使用的功能開始探索！</p>
-              <Link to="/new-system" className="new-system-link">
-                前往企業內訓專案
-              </Link>
+          <div>
+            <div className="welcome-box fade-in">
+              <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'16px'}}>
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="AI Icon" style={{width:'80px',height:'80px',marginBottom:'10px',filter:'drop-shadow(0 2px 8px #2196F355)'}}/>
+                <h2 style={{color:'var(--primary-color)',fontWeight:'bold',fontSize:'2rem',marginBottom:'10px'}}>歡迎使用「研發補助」</h2>
+                <p style={{fontSize:'1.2rem',color:'#555',maxWidth:'500px',textAlign:'center'}}>本系統結合 <span style={{color:'var(--primary-color)',fontWeight:'bold'}}>AI 技術</span>，協助你進行研發補助相關的練習、分析與規劃。<br/>請從上方選單選擇你想使用的功能開始探索！</p>
+                <Link to="/new-system" className="new-system-link">
+                  前往企業內訓專案
+                </Link>
+              </div>
             </div>
+            <AIPromptSection />
           </div>
-        ) : selectedCategory === 'rd-course-links' ? (
-          <CourseLinks />
-        ) : selectedCategory === 'rd-ai-math' ? (
-          <PracticeSection />
-        ) : selectedCategory === 'rd-exam-structure' ? (
-          <ExamStructureSection />
-        ) : selectedCategory === 'rd-prediction' ? (
-          <PredictionSection />
+        ) : selectedCategory === 'team-intro' ? (
+          <TeamIntroSection />
+        ) : selectedCategory === 'tools' ? (
+          <ToolsSection />
+        ) : selectedCategory === 'market-analysis' ? (
+          <MarketAnalysisSection />
+        ) : selectedCategory === 'service-intro' ? (
+          <ServiceIntroSection />
+        ) : selectedCategory === 'business-model' ? (
+          <BusinessModelSection />
         ) : (
           selectedCategory && questionData[selectedCategory]?.map((question, index) => (
             <QuestionBlock
@@ -122,37 +100,18 @@ function HomePage() {
 
 function NewSystem() {
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/categories?system=corp`);
-        setCategories(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching categories:', err);
-        setError('獲取分類失敗：' + err.message);
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  // 使用靜態分類資料，只包含 AI Prompt 相關分類
+  const categories = [
+    { _id: '6', value: 'team-intro', label: '團隊簡介' },
+    { _id: '7', value: 'tools', label: '使用工具' },
+    { _id: '8', value: 'market-analysis', label: '產業與市場分析' },
+    { _id: '9', value: 'service-intro', label: '服務介紹' },
+    { _id: '10', value: 'business-model', label: '商業模式' }
+  ];
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };
-
-  if (loading) {
-    return <div className="loading">載入中...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
 
   return (
     <div className="app">
@@ -176,26 +135,29 @@ function NewSystem() {
 
       <div className="content-area">
         {selectedCategory === '' ? (
-          <div className="welcome-box fade-in">
-            <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'16px'}}>
-              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="AI Icon" style={{width:'80px',height:'80px',marginBottom:'10px',filter:'drop-shadow(0 2px 8px #2196F355)'}}/>
-              <h2 style={{color:'var(--primary-color)',fontWeight:'bold',fontSize:'2rem',marginBottom:'10px'}}>歡迎使用「OO企業內訓專案」</h2>
-              <p style={{fontSize:'1.2rem',color:'#555',maxWidth:'500px',textAlign:'center'}}>本系統結合 <span style={{color:'var(--primary-color)',fontWeight:'bold'}}>AI 技術，<br/></span>協助你進行企業內訓相關的練習、分析與規劃。<br/>請從上方選單選擇你想使用的功能開始探索！</p>
-              <Link to="/" className="back-link">
-                返回研發補助
-              </Link>
+          <div>
+            <div className="welcome-box fade-in">
+              <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:'16px'}}>
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="AI Icon" style={{width:'80px',height:'80px',marginBottom:'10px',filter:'drop-shadow(0 2px 8px #2196F355)'}}/>
+                <h2 style={{color:'var(--primary-color)',fontWeight:'bold',fontSize:'2rem',marginBottom:'10px'}}>歡迎使用「OO企業內訓專案」</h2>
+                <p style={{fontSize:'1.2rem',color:'#555',maxWidth:'500px',textAlign:'center'}}>本系統結合 <span style={{color:'var(--primary-color)',fontWeight:'bold'}}>AI 技術，<br/></span>協助你進行企業內訓相關的練習、分析與規劃。<br/>請從上方選單選擇你想使用的功能開始探索！</p>
+                <Link to="/" className="back-link">
+                  返回研發補助
+                </Link>
+              </div>
             </div>
+            <AIPromptSection />
           </div>
-        ) : selectedCategory === 'course-links' ? (
-          <CourseLinks />
-        ) : selectedCategory === 'ai-english' ? (
-          <PracticeSection />
-        ) : selectedCategory === 'exam-structure' ? (
-          <ExamStructureSection />
-        ) : selectedCategory === 'ai-practice' ? (
-          <AIPracticeSection />
-        ) : selectedCategory === 'prediction' ? (
-          <PredictionSection />
+        ) : selectedCategory === 'team-intro' ? (
+          <TeamIntroSection />
+        ) : selectedCategory === 'tools' ? (
+          <ToolsSection />
+        ) : selectedCategory === 'market-analysis' ? (
+          <MarketAnalysisSection />
+        ) : selectedCategory === 'service-intro' ? (
+          <ServiceIntroSection />
+        ) : selectedCategory === 'business-model' ? (
+          <BusinessModelSection />
         ) : (
           selectedCategory && questionData[selectedCategory]?.map((question, index) => (
             <QuestionBlock

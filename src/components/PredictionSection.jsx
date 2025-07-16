@@ -16,19 +16,42 @@ const PredictionSection = () => {
   const fetchPredictions = async () => {
     try {
       console.log('Fetching predictions...');
-      // 獲取分類名稱
-      const categoryResponse = await axios.get(`${API_URL}/categories`);
-      const category = categoryResponse.data.find(cat => cat.label === '預測考題及個人分析報告');
-      setCategoryName(category ? category.label : '會考預測');
-
-      // 獲取內容
-      const response = await axios.get(`${API_URL}/contents?category=rd-prediction`);
-      console.log('Received predictions:', response.data);
-      setPredictions(response.data);
+      // 暫時使用示例數據，避免空白顯示
+      const samplePredictions = [
+        {
+          _id: '1',
+          title: '數學會考預測題型分析',
+          content: '根據近年會考趨勢，預測今年重點題型包括：代數運算、幾何證明、統計圖表分析等。',
+          steps: [
+            '分析近三年會考題型分布',
+            '統計各主題出現頻率',
+            '預測今年重點方向',
+            '提供針對性練習建議'
+          ]
+        },
+        {
+          _id: '2',
+          title: '個人數學能力分析報告',
+          content: '基於學習歷程和練習成果，為您生成專屬的數學能力分析報告。',
+          steps: [
+            '收集個人學習數據',
+            '分析強弱項目',
+            '比對同儕表現',
+            '提供改進建議'
+          ]
+        }
+      ];
+      
+      // 獲取分類名稱 - 使用示例數據
+      setCategoryName('會考預測');
+      
+      // 設置示例數據
+      setPredictions(samplePredictions);
       setError(null);
     } catch (err) {
       console.error('Error fetching predictions:', err);
       setError('獲取預測內容失敗：' + err.message);
+      setPredictions([]); // 確保在錯誤時 predictions 仍然是陣列
     } finally {
       setLoading(false);
     }
@@ -90,7 +113,7 @@ const PredictionSection = () => {
               <div className="steps-box">
                 <h4>操作步驟：</h4>
                 <ol>
-                  {prediction.steps.map((step, stepIndex) => (
+                  {Array.isArray(prediction.steps) && prediction.steps.map((step, stepIndex) => (
                     <li key={stepIndex}>{step}</li>
                   ))}
                 </ol>

@@ -31,8 +31,18 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
 import axios from 'axios';
 import { Science as ScienceIcon, Business as BusinessIcon } from '@mui/icons-material';
+import { aiPromptData } from '../data/aiPrompts';
 
 const API_URL = 'http://localhost:5000/api';
+
+// 靜態分類定義，只包含 AI Prompt 相關分類
+const staticCategories = [
+  { _id: '6', value: 'team-intro', label: '團隊簡介' },
+  { _id: '7', value: 'tools', label: '使用工具' },
+  { _id: '8', value: 'market-analysis', label: '產業與市場分析' },
+  { _id: '9', value: 'service-intro', label: '服務介紹' },
+  { _id: '10', value: 'business-model', label: '商業模式' }
+];
 
 function ContentManagement() {
   const [contents, setContents] = useState([]);
@@ -51,7 +61,7 @@ function ContentManagement() {
   const [newStep, setNewStep] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(staticCategories); // 初始化為靜態分類
   const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [categoryFormData, setCategoryFormData] = useState({
@@ -64,10 +74,22 @@ function ContentManagement() {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(`${API_URL}/categories?system=${selectedSystem}`);
-      setCategories(response.data);
+      const apiCategories = Array.isArray(response.data) ? response.data : [];
+      
+      // 合併 API 分類和靜態分類，避免重複
+      const allCategories = [...staticCategories];
+      apiCategories.forEach(apiCat => {
+        if (!allCategories.find(cat => cat.value === apiCat.value)) {
+          allCategories.push(apiCat);
+        }
+      });
+      
+      setCategories(allCategories);
     } catch (err) {
       console.error('Error fetching categories:', err);
-      setError('獲取分類列表失敗');
+      // 當 API 失敗時，使用靜態分類作為備用
+      setCategories(staticCategories);
+      setError('獲取分類列表失敗，使用預設分類');
     }
   };
 
@@ -76,11 +98,103 @@ function ContentManagement() {
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/contents?system=${selectedSystem}`);
-      setContents(response.data);
-      setFilteredContents(response.data);
+      const apiContents = Array.isArray(response.data) ? response.data : [];
+      
+      // 轉換 AI Prompt 資料為內容格式
+      const aiPromptContents = [];
+      aiPromptData.forEach(categoryData => {
+        if (categoryData.subcategories) {
+          // 處理有子分類的情況
+          categoryData.subcategories.forEach(subcat => {
+            subcat.prompts.forEach((prompt, index) => {
+              aiPromptContents.push({
+                _id: `ai-${categoryData.category}-${subcat.name}-${index}`,
+                category: 'market-analysis',
+                title: prompt.title,
+                prompt: prompt.content,
+                steps: [],
+                system: 'rd',
+                isAIPrompt: true,
+                originalCategory: categoryData.category,
+                subcategory: subcat.name
+              });
+            });
+          });
+        } else {
+          // 處理沒有子分類的情況
+          categoryData.prompts.forEach((prompt, index) => {
+            const categoryValue = categoryData.category === '團隊簡介' ? 'team-intro' :
+                                 categoryData.category === '使用工具' ? 'tools' :
+                                 categoryData.category === '服務介紹' ? 'service-intro' :
+                                 categoryData.category === '商業模式' ? 'business-model' : 'ai-prompts';
+            
+            aiPromptContents.push({
+              _id: `ai-${categoryData.category}-${index}`,
+              category: categoryValue,
+              title: prompt.title,
+              prompt: prompt.content,
+              steps: [],
+              system: 'rd',
+              isAIPrompt: true,
+              originalCategory: categoryData.category,
+              isLink: prompt.isLink || false,
+              url: prompt.url || ''
+            });
+          });
+        }
+      });
+      
+      // 合併 API 內容和 AI Prompt 內容
+      const allContents = [...apiContents, ...aiPromptContents];
+      setContents(allContents);
+      setFilteredContents(allContents);
       setError(null);
     } catch (err) {
       setError('獲取內容失敗：' + err.message);
+      // 即使 API 失敗，也顯示 AI Prompt 數據
+      const aiPromptContents = [];
+      aiPromptData.forEach(categoryData => {
+        if (categoryData.subcategories) {
+          categoryData.subcategories.forEach(subcat => {
+            subcat.prompts.forEach((prompt, index) => {
+              aiPromptContents.push({
+                _id: `ai-${categoryData.category}-${subcat.name}-${index}`,
+                category: 'market-analysis',
+                title: prompt.title,
+                prompt: prompt.content,
+                steps: [],
+                system: 'rd',
+                isAIPrompt: true,
+                originalCategory: categoryData.category,
+                subcategory: subcat.name
+              });
+            });
+          });
+        } else {
+          categoryData.prompts.forEach((prompt, index) => {
+            const categoryValue = categoryData.category === '團隊簡介' ? 'team-intro' :
+                                 categoryData.category === '使用工具' ? 'tools' :
+                                 categoryData.category === '服務介紹' ? 'service-intro' :
+                                 categoryData.category === '商業模式' ? 'business-model' : 'ai-prompts';
+            
+            aiPromptContents.push({
+              _id: `ai-${categoryData.category}-${index}`,
+              category: categoryValue,
+              title: prompt.title,
+              prompt: prompt.content,
+              steps: [],
+              system: 'rd',
+              isAIPrompt: true,
+              originalCategory: categoryData.category,
+              isLink: prompt.isLink || false,
+              url: prompt.url || ''
+            });
+          });
+        }
+      });
+      
+      setContents(aiPromptContents);
+      setFilteredContents(aiPromptContents);
     } finally {
       setLoading(false);
     }
@@ -93,10 +207,12 @@ function ContentManagement() {
 
   // 處理分類過濾
   useEffect(() => {
-    if (selectedCategory) {
+    if (selectedCategory && Array.isArray(contents)) {
       setFilteredContents(contents.filter(content => content.category === selectedCategory));
-    } else {
+    } else if (Array.isArray(contents)) {
       setFilteredContents(contents);
+    } else {
+      setFilteredContents([]);
     }
   }, [selectedCategory, contents]);
 
@@ -355,7 +471,7 @@ function ContentManagement() {
                 }}
               >
                 <MenuItem value="">全部內容</MenuItem>
-                {categories.map((category) => (
+                {Array.isArray(categories) && categories.map((category) => (
                   <MenuItem key={category.value} value={category.value}>
                     {category.label}
                   </MenuItem>
@@ -427,7 +543,7 @@ function ContentManagement() {
       ) : (
         <Box>
           <Grid container spacing={3}>
-            {filteredContents.map((content) => (
+            {Array.isArray(filteredContents) && filteredContents.map((content) => (
               <Grid item xs={12} sm={6} md={4} key={content._id}>
                 <Card 
                   sx={{ 
@@ -542,7 +658,7 @@ function ContentManagement() {
                           步驟：
                         </Typography>
                         <List dense sx={{ py: 0 }}>
-                          {content.steps.map((step, index) => (
+                          {Array.isArray(content.steps) && content.steps.map((step, index) => (
                             <ListItem 
                               key={index}
                               sx={{ 
@@ -631,7 +747,7 @@ function ContentManagement() {
                   }
                 }}
               >
-                {categories.map((category) => (
+                {Array.isArray(categories) && categories.map((category) => (
                   <MenuItem key={category.value} value={category.value}>
                     {category.label}
                   </MenuItem>
@@ -687,7 +803,7 @@ function ContentManagement() {
                 </Button>
               </Box>
               <List>
-                {formData.steps.map((step, index) => (
+                {Array.isArray(formData.steps) && formData.steps.map((step, index) => (
                   <ListItem
                     key={index}
                     sx={{
@@ -782,7 +898,7 @@ function ContentManagement() {
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <List>
-              {categories.map((category) => (
+              {Array.isArray(categories) && categories.map((category) => (
                 <ListItem
                   key={category._id}
                   sx={{
@@ -898,4 +1014,4 @@ function ContentManagement() {
   );
 }
 
-export default ContentManagement; 
+export default ContentManagement;

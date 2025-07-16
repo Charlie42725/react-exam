@@ -15,18 +15,41 @@ const ExamStructureSection = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 獲取分類名稱
-        const categoryResponse = await axios.get(`${API_URL}/categories`);
-        const category = categoryResponse.data.find(cat => cat.label === '會考架構分析');
-        setCategoryName(category ? category.label : '會考架構分析');
+        // 設置分類名稱
+        setCategoryName('會考架構分析');
 
-        // 獲取內容
-        const response = await axios.get(`${API_URL}/contents?category=rd-exam-structure`);
-        setStructures(response.data);
+        // 使用示例數據，避免空白顯示
+        const sampleStructures = [
+          {
+            _id: '1',
+            title: '會考數學科架構分析',
+            content: '深入分析會考數學科的考試架構，包括題型分配、難度層次、評分標準等。',
+            steps: [
+              '了解會考數學科目標與能力指標',
+              '分析題型分配：選擇題、非選擇題比例',
+              '掌握各單元權重分布',
+              '研究評分標準與答題技巧'
+            ]
+          },
+          {
+            _id: '2',
+            title: '各主題知識架構圖',
+            content: '建立完整的數學知識架構圖，幫助學生理解各主題間的關聯性。',
+            steps: [
+              '整理數與量、代數、幾何、統計各主題',
+              '建立知識點間的連結關係',
+              '標示重點與次要概念',
+              '製作學習路徑建議'
+            ]
+          }
+        ];
+
+        setStructures(sampleStructures);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('獲取數據失敗');
+        setStructures([]); // 確保在錯誤時 structures 仍然是陣列
         setLoading(false);
       }
     };
@@ -85,7 +108,7 @@ const ExamStructureSection = () => {
               <div className="steps-box">
                 <h4>操作步驟：</h4>
                 <ol>
-                  {structure.steps.map((step, stepIndex) => (
+                  {Array.isArray(structure.steps) && structure.steps.map((step, stepIndex) => (
                     <li key={stepIndex}>{step}</li>
                   ))}
                 </ol>

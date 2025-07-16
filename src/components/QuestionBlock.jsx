@@ -8,7 +8,7 @@ const QuestionBlock = ({ question, steps, explanation, index }) => {
       
       <div className="steps">
         <strong>解題步驟：</strong>
-        {steps.map((step, i) => (
+        {Array.isArray(steps) && steps.map((step, i) => (
           <p key={i}>{step}</p>
         ))}
       </div>
