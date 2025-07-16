@@ -60,7 +60,7 @@ export const Index = () => {
           flexDirection: "column",
         }}
       >
-        <h1>研發補助</h1>
+        <h1 style={{ marginBottom: "2.5rem" }}>研發補助</h1>
 
         <div
           className="card"
@@ -68,17 +68,35 @@ export const Index = () => {
             display: "flex",
             flexWrap: "wrap",
             alignItems: "center",
-            gap: "0.5rem",
-            padding: "1rem",
+            gap: "1rem",
+            padding: "1.5rem",
+            marginBottom: "2rem",
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%)",
           }}
         >
-          <label htmlFor="category">選擇章節：</label>
+          <label
+            htmlFor="category"
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: "600",
+              color: "var(--text-color-primary)",
+              minWidth: "120px",
+            }}
+          >
+            選擇章節：
+          </label>
           <select
             id="category"
             value={selectedCategory}
             onChange={(e) => {
               if (e.target.value === selectedCategory) return;
               setSelectedCategory(e.target.value);
+            }}
+            style={{
+              minWidth: "200px",
+              flex: "1",
+              maxWidth: "300px",
             }}
           >
             <option value="">--請選擇--</option>
@@ -90,57 +108,59 @@ export const Index = () => {
           </select>
         </div>
 
-        <div className="card" style={{ padding: "1.5rem", minHeight: "25rem" }}>
+        <div className="card" style={{ padding: "2rem", minHeight: "30rem" }}>
           {!selectedCategory || !matchCategory ? (
             <div
-              className="card"
+              className="card welcome-section"
               style={{
                 width: "fit-content",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: "1.5rem",
-                padding: "2rem",
+                gap: "2rem",
+                padding: "3rem 2.5rem",
                 marginInline: "auto",
-                maxWidth: "600px",
+                maxWidth: "650px",
               }}
             >
-              <div>
+              <div
+              >
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
                   alt="AI Icon"
                   style={{
-                    width: "90px",
-                    height: "90px",
-                    filter: "drop-shadow(0 4px 12px #2196F355)",
+                    width: "120px",
+                    height: "120px",
                   }}
                 />
               </div>
               <h2
                 style={{
                   color: "var(--text-color-primary)",
-                  fontWeight: "bold",
-                  fontSize: "1.8rem",
-                  textAlign: "center",
-                  margin: "0",
+                  fontWeight: "700",
+                  fontSize: "2rem",
                 }}
               >
                 歡迎使用「研發補助」
               </h2>
               <p
                 style={{
-                  fontSize: "1.1rem",
+                  fontSize: "1.15rem",
                   color: "var(--text-color-muted)",
                   textAlign: "center",
-                  lineHeight: "1.6",
+                  lineHeight: "1.7",
                   margin: "0",
+                  letterSpacing: "0.3px",
                 }}
               >
                 本系統結合{" "}
                 <span
                   style={{
                     color: "var(--text-color-primary)",
-                    fontWeight: "bold",
+                    fontWeight: "700",
+                    background: "rgba(33, 150, 243, 0.1)",
+                    padding: "0.2rem 0.5rem",
+                    borderRadius: "0.25rem",
                   }}
                 >
                   AI 技術
@@ -153,10 +173,11 @@ export const Index = () => {
                 to="/new-system"
                 className="btn-primary"
                 style={{
-                  borderRadius: "0.5rem",
-                  padding: "0.75rem 1.5rem",
-                  fontSize: "1rem",
+                  borderRadius: "0.75rem",
+                  padding: "1rem 2rem",
+                  fontSize: "1.1rem",
                   fontWeight: "600",
+                  textDecoration: "none",
                 }}
               >
                 前往企業內訓專案
@@ -172,12 +193,17 @@ export const Index = () => {
                 exit="hiddenBottom"
                 style={{
                   display: "grid",
-                  gap: "1rem",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                  gap: "1.5rem",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                  alignItems: "stretch",
                 }}
               >
                 {matchCategory.prompts.map((prompt, index) => (
-                  <motion.div key={index} variants={fadeInItem}>
+                  <motion.div
+                    key={index}
+                    variants={fadeInItem}
+                    style={{ height: "100%" }}
+                  >
                     <PromptCard
                       prompt={prompt}
                       caregory={matchCategory.title}

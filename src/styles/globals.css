@@ -129,3 +129,24 @@ button:hover,
   font-weight: bold;
   transition: all 0.3s ease;
 }
+
+/* Loading states */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--text-color-muted);
+  font-size: 1.1rem;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #e74c3c;
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 1rem;
+}
