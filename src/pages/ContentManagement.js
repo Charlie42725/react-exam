@@ -29,10 +29,15 @@ import {
   Tab
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
+import axios from 'axios';
 import { Science as ScienceIcon, Business as BusinessIcon } from '@mui/icons-material';
-import { useContents, useCategories } from '../hooks/useAPI';
+
+const API_URL = 'http://localhost:5000/api';
 
 function ContentManagement() {
+  const [contents, setContents] = useState([]);
+  const [filteredContents, setFilteredContents] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSystem, setSelectedSystem] = useState('rd'); // 預設選擇研發系統
   const [open, setOpen] = useState(false);
   const [editingContent, setEditingContent] = useState(null);
@@ -44,6 +49,9 @@ function ContentManagement() {
     system: 'rd' // 預設為研發系統
   });
   const [newStep, setNewStep] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [categoryFormData, setCategoryFormData] = useState({
@@ -52,42 +60,50 @@ function ContentManagement() {
     system: 'rd'
   });
 
-  // 使用自定義 Hooks
-  const {
-    contents,
-    filteredContents,
-    selectedCategory,
-    setSelectedCategory,
-    loading: contentsLoading,
-    error: contentsError,
-    fetchContents,
-    createContent,
-    updateContent,
-    deleteContent,
-    setError: setContentsError
-  } = useContents(selectedSystem);
+  // 獲取分類列表
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/categories?system=${selectedSystem}`);
+      setCategories(response.data);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      setError('獲取分類列表失敗');
+    }
+  };
 
-  const {
-    categories,
-    loading: categoriesLoading,
-    error: categoriesError,
-    fetchCategories,
-    createCategory,
-    updateCategory,
-    deleteCategory,
-    setError: setCategoriesError
-  } = useCategories(selectedSystem);
+  // 獲取所有內容
+  const fetchContents = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/contents?system=${selectedSystem}`);
+      setContents(response.data);
+      setFilteredContents(response.data);
+      setError(null);
+    } catch (err) {
+      setError('獲取內容失敗：' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchCategories();
     fetchContents();
-  }, [selectedSystem, fetchCategories, fetchContents]);
+  }, [selectedSystem]);
+
+  // 處理分類過濾
+  useEffect(() => {
+    if (selectedCategory) {
+      setFilteredContents(contents.filter(content => content.category === selectedCategory));
+    } else {
+      setFilteredContents(contents);
+    }
+  }, [selectedCategory, contents]);
 
   const handleSystemChange = (event, newValue) => {
     setSelectedSystem(newValue);
     setSelectedCategory('');
     setFormData(prev => ({ ...prev, system: newValue }));
-    setCategoryFormData(prev => ({ ...prev, system: newValue }));
   };
 
   const handleCategoryChange = (event) => {
@@ -126,9 +142,10 @@ function ContentManagement() {
   const handleDelete = async (id) => {
     if (window.confirm('確定要刪除這個內容嗎？')) {
       try {
-        await deleteContent(id);
+        await axios.delete(`${API_URL}/contents/${id}`);
+        fetchContents();
       } catch (err) {
-        setContentsError('刪除內容失敗：' + err.message);
+        setError('刪除內容失敗：' + err.message);
       }
     }
   };
@@ -138,7 +155,7 @@ function ContentManagement() {
     try {
       // 驗證必填欄位
       if (!formData.category || !formData.title || !formData.prompt) {
-        setContentsError('請填寫所有必填欄位');
+        setError('請填寫所有必填欄位');
         return;
       }
 
@@ -148,17 +165,18 @@ function ContentManagement() {
       };
 
       if (editingContent) {
-        await updateContent(editingContent._id, contentData);
+        await axios.put(`${API_URL}/contents/${editingContent._id}`, contentData);
       } else {
-        await createContent(contentData);
+        await axios.post(`${API_URL}/contents`, contentData);
       }
 
       handleClose();
-      setContentsError(null);
+      fetchContents();
+      setError(null);
     } catch (err) {
       console.error('Error saving content:', err);
-      const errorMessage = err.message || '保存內容失敗';
-      setContentsError(errorMessage);
+      const errorMessage = err.response?.data?.message || err.message;
+      setError(`保存內容失敗：${errorMessage}`);
     }
   };
 
@@ -219,26 +237,28 @@ function ContentManagement() {
       };
 
       if (editingCategory) {
-        await updateCategory(editingCategory._id, categoryData);
+        await axios.put(`${API_URL}/categories/${editingCategory._id}`, categoryData);
       } else {
-        await createCategory(categoryData);
+        await axios.post(`${API_URL}/categories`, categoryData);
       }
 
       handleCloseCategoryDialog();
-      setCategoriesError(null);
+      fetchCategories();
+      setError(null);
     } catch (err) {
       console.error('Error saving category:', err);
-      setCategoriesError('保存分類失敗：' + err.message);
+      setError('保存分類失敗：' + (err.response?.data?.message || err.message));
     }
   };
 
   const handleDeleteCategory = async (id) => {
     if (window.confirm('確定要刪除這個分類嗎？刪除分類可能會影響相關內容。')) {
       try {
-        await deleteCategory(id);
+        await axios.delete(`${API_URL}/categories/${id}`);
+        fetchCategories();
       } catch (err) {
         console.error('Error deleting category:', err);
-        setCategoriesError('刪除分類失敗：' + err.message);
+        setError('刪除分類失敗');
       }
     }
   };
@@ -387,7 +407,7 @@ function ContentManagement() {
         </Grid>
       </Paper>
 
-      {(contentsError || categoriesError) && (
+      {error && (
         <Alert 
           severity="error" 
           sx={{ 
@@ -396,18 +416,18 @@ function ContentManagement() {
             boxShadow: '0 2px 8px rgba(211, 47, 47, 0.1)'
           }}
         >
-          {contentsError || categoriesError}
+          {error}
         </Alert>
       )}
 
-      {(contentsLoading || categoriesLoading) ? (
+      {loading ? (
         <Box display="flex" justifyContent="center" my={4}>
           <CircularProgress size={40} />
         </Box>
       ) : (
         <Box>
           <Grid container spacing={3}>
-            {Array.isArray(filteredContents) && filteredContents.map((content) => (
+            {filteredContents.map((content) => (
               <Grid item xs={12} sm={6} md={4} key={content._id}>
                 <Card 
                   sx={{ 
@@ -459,7 +479,7 @@ function ContentManagement() {
                             whiteSpace: 'nowrap'
                           }}
                         >
-                          分類：{Array.isArray(categories) ? (categories.find(c => c.value === content.category)?.label || content.category) : content.category}
+                          分類：{categories.find(c => c.value === content.category)?.label || content.category}
                         </Typography>
                       </Box>
                       <Box>
