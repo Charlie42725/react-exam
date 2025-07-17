@@ -12,15 +12,33 @@ export const PromptCard = ({ caregory, prompt }) => {
         target="_blank"
         style={{
           borderRadius: "0.5rem",
-          padding: "0.5rem 0.75rem",
-          fontSize: "1.25rem",
+          padding: "1rem 1.5rem",
+          fontSize: "1.1rem",
           fontWeight: "600",
           display: "flex",
           alignItems: "center",
-          gap: "0.3rem",
+          gap: "0.5rem",
           justifyContent: "center",
+          textDecoration: "none",
+          transition: "all 0.3s ease",
+          background: "linear-gradient(135deg, var(--text-color-primary), var(--text-color-secondary))",
+          color: "white",
+          border: "none",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+          minHeight: "3rem",
+          position: "relative",
+          overflow: "hidden",
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.transform = "translateY(-2px)";
+          e.target.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.25)";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = "translateY(0)";
+          e.target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
         }}
       >
+        <span style={{ fontSize: "1rem" }}>🔗</span>
         {prompt.label}
       </a>
     );
