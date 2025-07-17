@@ -57,9 +57,10 @@ export const Index = () => {
         style={{
           display: "flex",
           flexDirection: "column",
+          gap: "2rem",
         }}
       >
-        <h1 style={{ marginBottom: "2.5rem" }}>研發補助</h1>
+        <h1>研發補助</h1>
 
         <div
           className="card"
@@ -68,18 +69,16 @@ export const Index = () => {
             flexWrap: "wrap",
             alignItems: "center",
             gap: "1rem",
-            padding: "1.5rem",
-            marginBottom: "2rem",
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%)",
+            padding: "2rem",
           }}
         >
           <label
             htmlFor="category"
             style={{
-              fontSize: "1.1rem",
+              fontSize: "1.2rem",
               fontWeight: "600",
               color: "var(--text-color-primary)",
+              minWidth: "fit-content",
             }}
           >
             選擇章節：
@@ -93,11 +92,11 @@ export const Index = () => {
             }}
             style={{
               minWidth: "10rem",
-              flex: "1",
-              maxWidth: "16rem",
+              maxWidth: "20rem",
+              fontSize: "1rem",
             }}
           >
-            <option value="">--請選擇--</option>
+            <option value="">--請選擇章節--</option>
             {categories.map((category) => (
               <option key={category._id} value={category.value}>
                 {category.label}
@@ -106,7 +105,14 @@ export const Index = () => {
           </select>
         </div>
 
-        <div className="card" style={{ padding: "2rem", minHeight: "30rem" }}>
+        <div
+          className="card"
+          style={{
+            padding: "2.5rem",
+            minHeight: "32rem",
+            borderRadius: "16px",
+          }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedCategory}
@@ -124,62 +130,74 @@ export const Index = () => {
                 <>
                   <motion.div
                     variants={fadeInItem}
-                    className="card"
                     style={{
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      gap: "2rem",
-                      padding: "3rem 2.5rem",
-                      marginInline: "auto",
-                      maxWidth: "650px",
+                      gap: "2.5rem",
+                      padding: "3.5rem 3rem",
+                      borderRadius: "1rem",
+                      border: "1px solid rgba(33, 150, 243, 0.1)",
+                      boxShadow: "0 4px 16px rgba(33, 150, 243, 0.08)",
                     }}
                   >
-                    <div>
+                    <div style={{ position: "relative" }}>
                       <img
                         src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
                         alt="AI Icon"
                         style={{
-                          width: "120px",
-                          height: "120px",
+                          width: "140px",
+                          height: "140px",
+                          filter:
+                            "drop-shadow(0 4px 8px rgba(33, 150, 243, 0.2))",
                         }}
                       />
                     </div>
-                    <h2
-                      style={{
-                        color: "var(--text-color-primary)",
-                        fontWeight: "700",
-                        fontSize: "2rem",
-                      }}
-                    >
-                      歡迎使用「研發補助」
-                    </h2>
-                    <p
-                      style={{
-                        fontSize: "1.15rem",
-                        color: "var(--text-color-muted)",
-                        textAlign: "center",
-                        lineHeight: "1.7",
-                        margin: "0",
-                        letterSpacing: "0.3px",
-                      }}
-                    >
-                      本系統結合{" "}
-                      <span
+                    <div style={{ textAlign: "center" }}>
+                      <h2
                         style={{
                           color: "var(--text-color-primary)",
                           fontWeight: "700",
-                          background: "rgba(33, 150, 243, 0.1)",
-                          padding: "0.2rem 0.5rem",
-                          borderRadius: "0.25rem",
+                          fontSize: "2.2rem",
+                          marginBottom: "1rem",
+                          background:
+                            "linear-gradient(135deg, #1976d2, #42a5f5)",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          backgroundClip: "text",
                         }}
                       >
-                        AI 技術
-                      </span>
-                      ，協助你進行研發補助相關的練習、分析與規劃。
-                      <br />
-                      請從上方選單選擇你想了解的章節開始探索！
-                    </p>
+                        歡迎使用「研發補助」
+                      </h2>
+                      <p
+                        style={{
+                          fontSize: "1.2rem",
+                          color: "var(--text-color-muted)",
+                          textAlign: "center",
+                          lineHeight: "1.8",
+                          margin: "0",
+                          letterSpacing: "0.3px",
+                        }}
+                      >
+                        本系統結合{" "}
+                        <span
+                          style={{
+                            color: "var(--text-color-primary)",
+                            fontWeight: "700",
+                            background:
+                              "linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(33, 150, 243, 0.2))",
+                            padding: "0.3rem 0.8rem",
+                            borderRadius: "6px",
+                            border: "1px solid rgba(33, 150, 243, 0.2)",
+                          }}
+                        >
+                          AI 技術
+                        </span>
+                        ，協助你進行研發補助相關的練習、分析與規劃。
+                        <br />
+                        請從上方選單選擇你想了解的章節開始探索！
+                      </p>
+                    </div>
                     {/* <Link
                 to="/new-system"
                 className="btn-primary"
@@ -200,27 +218,38 @@ export const Index = () => {
                       width: "100%",
                       display: "flex",
                       flexDirection: "column",
-                      gap: "1rem",
-                      borderRadius: "0.75rem",
-                      borderLeft: "5px solid var(--text-color-primary)",
-                      background: "linear-gradient(135deg, #e3f2fd, #f3e5f5)",
-                      padding: "1.5rem",
-                      maxWidth: "650px",
-                      marginInline: "auto",
+                      gap: "1.2rem",
+                      borderRadius: "12px",
+                      borderLeft: "4px solid var(--text-color-primary)",
+                      background:
+                        "linear-gradient(135deg, rgba(227, 242, 253, 0.8), rgba(243, 229, 245, 0.8))",
+                      padding: "2rem",
+                      marginTop: "1rem",
+                      boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
                     }}
                   >
                     <h3
                       style={{
                         color: "var(--text-color-primary)",
-                        fontSize: "1.2rem",
+                        fontSize: "1.3rem",
                         fontWeight: "700",
+                        margin: "0 0 0.5rem 0",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
                       }}
                     >
-                      💡 使用提示
+                      <span style={{ fontSize: "1.5rem" }}>💡</span>
+                      使用提示
                     </h3>
                     <ul
                       style={{
                         listStyle: "none",
+                        margin: "0",
+                        padding: "0",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "0.8rem",
                       }}
                     >
                       {[
@@ -232,18 +261,23 @@ export const Index = () => {
                         <li
                           key={index}
                           style={{
-                            paddingBlock: "0.5rem",
                             color: "var(--text-color-muted)",
                             position: "relative",
+                            paddingLeft: "1.5rem",
+                            lineHeight: "1.6",
                           }}
                         >
                           <span
                             style={{
                               color: "var(--text-color-primary)",
+                              position: "absolute",
+                              left: "0",
+                              fontWeight: "bold",
+                              fontSize: "1.1rem",
                             }}
                           >
                             ✓
-                          </span>{" "}
+                          </span>
                           {tip}
                         </li>
                       ))}

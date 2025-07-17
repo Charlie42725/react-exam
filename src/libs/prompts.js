@@ -1,21 +1,8 @@
 export const promptDatas = [
   {
-    title: "團隊簡介",
-    value: "team-introduction",
-    id: 1,
-    prompts: [
-      {
-        isLink: false,
-        label: "",
-        value: `幫我生成一段專業的團隊成員介紹。\n這些成員的教育背景：[成員A: 教育背景; 成員B: 教育背景; ….]。\n成員A: [年資]、[專長]、[具體成就];\n成員B: [年資]、[專長]、[具體成就];…。\n請使用正式且專業的語氣，強調這些成員的專業能力和成就，並將介紹控制在3至4句話之內，最後使用表格呈現。`,
-      },
-    ],
-  },
-
-  {
     title: "使用工具",
     value: "tools",
-    id: 2,
+    id: 1,
     prompts: [
       {
         isLink: true,
@@ -31,6 +18,19 @@ export const promptDatas = [
         isLink: true,
         label: "特助 ChatGPT",
         value: `https://chat.openai.com/`,
+      },
+    ],
+  },
+
+  {
+    title: "團隊簡介",
+    value: "team-introduction",
+    id: 2,
+    prompts: [
+      {
+        isLink: false,
+        label: "",
+        value: `幫我生成一段專業的團隊成員介紹。\n這些成員的教育背景：[成員A: 教育背景; 成員B: 教育背景; ….]。\n成員A: [年資]、[專長]、[具體成就];\n成員B: [年資]、[專長]、[具體成就];…。\n請使用正式且專業的語氣，強調這些成員的專業能力和成就，並將介紹控制在3至4句話之內，最後使用表格呈現。`,
       },
     ],
   },
