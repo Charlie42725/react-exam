@@ -3,14 +3,6 @@ import { copyToClipboard } from "../../utils/copyToClipboard";
 
 export const PromptCard = ({ caregory, prompt }) => {
   const [copied, setCopied] = useState(false);
-
-  const handleCopy = (e) => {
-    e.stopPropagation();
-    copyToClipboard(prompt.value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <div
       className="card"
@@ -44,34 +36,6 @@ export const PromptCard = ({ caregory, prompt }) => {
         >
           {prompt.label || caregory}
         </h3>
-
-        <button
-          onClick={handleCopy}
-          style={{
-            background: copied ? "var(--text-color-secondary)" : "var(--text-color-primary)",
-            color: "white",
-            borderRadius: "0.5rem",
-            padding: "0.5rem 0.75rem",
-            fontSize: "0.85rem",
-            fontWeight: "600",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.3rem",
-            justifyContent: "center",
-          }}
-        >
-          {copied ? (
-            <>
-              <span style={{ fontSize: "0.75rem" }}>✓</span>
-              已複製
-            </>
-          ) : (
-            <>
-              <span style={{ fontSize: "0.75rem" }}>📋</span>
-              複製
-            </>
-          )}
-        </button>
       </div>
 
       <article
@@ -109,6 +73,40 @@ export const PromptCard = ({ caregory, prompt }) => {
           </p>
         ))}
       </article>
+      <button
+        onClick={(e) => {
+          if (copied) return;
+          copyToClipboard(prompt.value);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        }}
+        style={{
+          background: copied
+            ? "var(--text-color-secondary)"
+            : "var(--text-color-primary)",
+          color: "white",
+          borderRadius: "0.5rem",
+          padding: "0.5rem 0.75rem",
+          fontSize: "0.85rem",
+          fontWeight: "600",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.3rem",
+          justifyContent: "center",
+        }}
+      >
+        {copied ? (
+          <>
+            <span style={{ fontSize: "0.75rem" }}>✓</span>
+            已複製
+          </>
+        ) : (
+          <>
+            <span style={{ fontSize: "0.75rem" }}>📋</span>
+            複製
+          </>
+        )}
+      </button>
     </div>
   );
 };

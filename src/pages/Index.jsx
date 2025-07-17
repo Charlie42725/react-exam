@@ -123,8 +123,7 @@ export const Index = () => {
                 maxWidth: "650px",
               }}
             >
-              <div
-              >
+              <div>
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
                   alt="AI Icon"
@@ -169,7 +168,7 @@ export const Index = () => {
                 <br />
                 請從上方選單選擇你想使用的功能開始探索！
               </p>
-              <Link
+              {/* <Link
                 to="/new-system"
                 className="btn-primary"
                 style={{
@@ -181,7 +180,7 @@ export const Index = () => {
                 }}
               >
                 前往企業內訓專案
-              </Link>
+              </Link> */}
             </div>
           ) : (
             <AnimatePresence mode="wait">
@@ -192,17 +191,13 @@ export const Index = () => {
                 animate="show"
                 exit="hiddenBottom"
                 style={{
-                  display: "grid",
+                  display: "flex",
                   gap: "1.5rem",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-                  alignItems: "stretch",
+                  flexDirection: "column",
                 }}
               >
                 {matchCategory.prompts.map((prompt, index) => (
-                  <motion.div
-                    key={index}
-                    variants={fadeInItem}
-                  >
+                  <motion.div key={index} variants={fadeInItem}>
                     <PromptCard
                       prompt={prompt}
                       caregory={matchCategory.title}

@@ -55,7 +55,7 @@ h1::after {
   background: linear-gradient(
     90deg,
     var(--text-color-primary),
-    var(--text-color-secondary)
+    var(--text-color-accent)
   );
   border-radius: 2px;
 }
