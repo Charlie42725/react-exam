@@ -3,6 +3,28 @@ import { copyToClipboard } from "../../utils/copyToClipboard";
 
 export const PromptCard = ({ caregory, prompt }) => {
   const [copied, setCopied] = useState(false);
+  if (prompt.isLink)
+    return (
+      <a
+        href={prompt.value}
+        className="btn-primary"
+        rel="noopener noreferrer"
+        target="_blank"
+        style={{
+          borderRadius: "0.5rem",
+          padding: "0.5rem 0.75rem",
+          fontSize: "1.25rem",
+          fontWeight: "600",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.3rem",
+          justifyContent: "center",
+        }}
+      >
+        {prompt.label}
+      </a>
+    );
+
   return (
     <div
       className="card"
@@ -37,7 +59,6 @@ export const PromptCard = ({ caregory, prompt }) => {
           {prompt.label || caregory}
         </h3>
       </div>
-
       <article
         style={{
           display: "flex",
@@ -73,6 +94,7 @@ export const PromptCard = ({ caregory, prompt }) => {
           </p>
         ))}
       </article>
+
       <button
         onClick={(e) => {
           if (copied) return;
