@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
 import { promptDatas } from "../libs/prompts";
 import { PromptCard } from "../components/Index/PromptCard";
 import { AnimatePresence, motion } from "framer-motion";
@@ -81,7 +80,6 @@ export const Index = () => {
               fontSize: "1.1rem",
               fontWeight: "600",
               color: "var(--text-color-primary)",
-              minWidth: "120px",
             }}
           >
             選擇章節：
@@ -94,9 +92,9 @@ export const Index = () => {
               setSelectedCategory(e.target.value);
             }}
             style={{
-              minWidth: "200px",
+              minWidth: "10rem",
               flex: "1",
-              maxWidth: "300px",
+              maxWidth: "16rem",
             }}
           >
             <option value="">--請選擇--</option>
@@ -109,66 +107,80 @@ export const Index = () => {
         </div>
 
         <div className="card" style={{ padding: "2rem", minHeight: "30rem" }}>
-          {!selectedCategory || !matchCategory ? (
-            <div
-              className="card welcome-section"
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedCategory}
+              variants={staggerContainer}
+              initial="hiddenBottom"
+              animate="show"
+              exit="hiddenBottom"
               style={{
-                width: "fit-content",
                 display: "flex",
+                gap: "1.5rem",
                 flexDirection: "column",
-                alignItems: "center",
-                gap: "2rem",
-                padding: "3rem 2.5rem",
-                marginInline: "auto",
-                maxWidth: "650px",
               }}
             >
-              <div>
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
-                  alt="AI Icon"
-                  style={{
-                    width: "120px",
-                    height: "120px",
-                  }}
-                />
-              </div>
-              <h2
-                style={{
-                  color: "var(--text-color-primary)",
-                  fontWeight: "700",
-                  fontSize: "2rem",
-                }}
-              >
-                歡迎使用「研發補助」
-              </h2>
-              <p
-                style={{
-                  fontSize: "1.15rem",
-                  color: "var(--text-color-muted)",
-                  textAlign: "center",
-                  lineHeight: "1.7",
-                  margin: "0",
-                  letterSpacing: "0.3px",
-                }}
-              >
-                本系統結合{" "}
-                <span
-                  style={{
-                    color: "var(--text-color-primary)",
-                    fontWeight: "700",
-                    background: "rgba(33, 150, 243, 0.1)",
-                    padding: "0.2rem 0.5rem",
-                    borderRadius: "0.25rem",
-                  }}
-                >
-                  AI 技術
-                </span>
-                ，協助你進行研發補助相關的練習、分析與規劃。
-                <br />
-                請從上方選單選擇你想使用的功能開始探索！
-              </p>
-              {/* <Link
+              {!selectedCategory || !matchCategory ? (
+                <>
+                  <motion.div
+                    variants={fadeInItem}
+                    className="card"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "2rem",
+                      padding: "3rem 2.5rem",
+                      marginInline: "auto",
+                      maxWidth: "650px",
+                    }}
+                  >
+                    <div>
+                      <img
+                        src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
+                        alt="AI Icon"
+                        style={{
+                          width: "120px",
+                          height: "120px",
+                        }}
+                      />
+                    </div>
+                    <h2
+                      style={{
+                        color: "var(--text-color-primary)",
+                        fontWeight: "700",
+                        fontSize: "2rem",
+                      }}
+                    >
+                      歡迎使用「研發補助」
+                    </h2>
+                    <p
+                      style={{
+                        fontSize: "1.15rem",
+                        color: "var(--text-color-muted)",
+                        textAlign: "center",
+                        lineHeight: "1.7",
+                        margin: "0",
+                        letterSpacing: "0.3px",
+                      }}
+                    >
+                      本系統結合{" "}
+                      <span
+                        style={{
+                          color: "var(--text-color-primary)",
+                          fontWeight: "700",
+                          background: "rgba(33, 150, 243, 0.1)",
+                          padding: "0.2rem 0.5rem",
+                          borderRadius: "0.25rem",
+                        }}
+                      >
+                        AI 技術
+                      </span>
+                      ，協助你進行研發補助相關的練習、分析與規劃。
+                      <br />
+                      請從上方選單選擇你想了解的章節開始探索！
+                    </p>
+                    {/* <Link
                 to="/new-system"
                 className="btn-primary"
                 style={{
@@ -181,32 +193,75 @@ export const Index = () => {
               >
                 前往企業內訓專案
               </Link> */}
-            </div>
-          ) : (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={matchCategory.value}
-                variants={staggerContainer}
-                initial="hiddenBottom"
-                animate="show"
-                exit="hiddenBottom"
-                style={{
-                  display: "flex",
-                  gap: "1.5rem",
-                  flexDirection: "column",
-                }}
-              >
-                {matchCategory.prompts.map((prompt, index) => (
+                  </motion.div>
+                  <motion.div
+                    variants={fadeInItem}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1rem",
+                      borderRadius: "0.75rem",
+                      borderLeft: "5px solid var(--text-color-primary)",
+                      background: "linear-gradient(135deg, #e3f2fd, #f3e5f5)",
+                      padding: "1.5rem",
+                      maxWidth: "650px",
+                      marginInline: "auto",
+                    }}
+                  >
+                    <h3
+                      style={{
+                        color: "var(--text-color-primary)",
+                        fontSize: "1.2rem",
+                        fontWeight: "700",
+                      }}
+                    >
+                      💡 使用提示
+                    </h3>
+                    <ul
+                      style={{
+                        listStyle: "none",
+                      }}
+                    >
+                      {[
+                        "點擊「複製」按鈕將 Prompt 複製到剪貼簿",
+                        "將 [括號] 內的內容替換為您的具體資訊",
+                        "可以根據需要調整 Prompt 的內容和格式",
+                        "建議在使用前先了解各個 AI 工具的特性",
+                      ].map((tip, index) => (
+                        <li
+                          key={index}
+                          style={{
+                            paddingBlock: "0.5rem",
+                            color: "var(--text-color-muted)",
+                            position: "relative",
+                          }}
+                        >
+                          <span
+                            style={{
+                              color: "var(--text-color-primary)",
+                            }}
+                          >
+                            ✓
+                          </span>{" "}
+                          {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                </>
+              ) : (
+                matchCategory.prompts.map((prompt, index) => (
                   <motion.div key={index} variants={fadeInItem}>
                     <PromptCard
                       prompt={prompt}
                       caregory={matchCategory.title}
                     />
                   </motion.div>
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          )}
+                ))
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>
