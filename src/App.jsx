@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
 import axios from "axios";
@@ -13,7 +12,6 @@ import "./styles/globals.css";
 const API_URL = "http://localhost:5000/api";
 axios.defaults.baseURL = API_URL;
 
-
 // 主題配置
 const theme = createTheme({
   palette: {
@@ -25,6 +23,7 @@ const theme = createTheme({
     },
   },
 });
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
