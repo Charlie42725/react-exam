@@ -1,0 +1,253 @@
+.ai-prompt-section {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.section-header h2 {
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.section-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.prompt-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.category-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.category-header {
+  background: linear-gradient(135deg, var(--primary-color), #42a5f5);
+  color: white;
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s ease;
+}
+
+.category-header:hover {
+  background: linear-gradient(135deg, #1565c0, var(--primary-color));
+}
+
+.category-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.expand-icon {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.expand-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.category-content {
+  padding: 20px;
+}
+
+.subcategories {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.subcategory h4 {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e3f2fd;
+}
+
+.prompts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.prompt-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.prompt-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
+  transform: translateY(-2px);
+}
+
+.prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.prompt-header h5 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
+  flex: 1;
+}
+
+.prompt-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.copy-btn, .link-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.copy-btn {
+  background: var(--primary-color);
+  color: white;
+}
+
+.copy-btn:hover {
+  background: #1565c0;
+  transform: scale(1.05);
+}
+
+.link-btn {
+  background: #4caf50;
+  color: white;
+}
+
+.link-btn:hover {
+  background: #45a049;
+  transform: scale(1.05);
+}
+
+.prompt-content {
+  background: white;
+  border-radius: 6px;
+  padding: 12px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.prompt-content pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+.link-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.usage-tips {
+  margin-top: 40px;
+  padding: 20px;
+  background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+  border-radius: 12px;
+  border-left: 5px solid var(--primary-color);
+}
+
+.usage-tips h3 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.usage-tips ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.usage-tips li {
+  padding: 8px 0;
+  color: #555;
+  position: relative;
+  padding-left: 20px;
+}
+
+.usage-tips li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .ai-prompt-section {
+    padding: 15px;
+  }
+  
+  .section-header h2 {
+    font-size: 2rem;
+  }
+  
+  .prompts-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .prompt-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .prompt-actions {
+    justify-content: flex-end;
+  }
+  
+  .category-header {
+    padding: 12px 15px;
+  }
+  
+  .category-content {
+    padding: 15px;
+  }
+}
