@@ -93,6 +93,7 @@ export const Index = () => {
             style={{
               minWidth: "10rem",
               maxWidth: "20rem",
+              color: "var(--text-color-muted)",
               fontSize: "1rem",
             }}
           >
@@ -134,7 +135,7 @@ export const Index = () => {
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      gap: "2.5rem",
+                      gap: "1.5rem",
                       padding: "3.5rem 3rem",
                       borderRadius: "1rem",
                       border: "1px solid rgba(33, 150, 243, 0.1)",
